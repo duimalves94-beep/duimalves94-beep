@@ -3,193 +3,580 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>陈怡天 · 个人简历</title>
+    <title>陈怡天 · Resume</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
-    <div class="page">
-      <header class="hero">
-        <div class="hero-main">
-          <h1 class="name">陈怡天</h1>
-          <p class="tagline">求职意向：实习生（AI 方向）</p>
-        </div>
-        <ul class="contact">
-          <li><span class="label">手机</span>17846678576</li>
-          <li>
-            <span class="label">邮箱</span>
-            <a href="mailto:cyt1527495869@163.com">cyt1527495869@163.com</a>
-          </li>
-          <li><span class="label">籍贯</span>广东省深圳市</li>
-          <li><span class="label">出生年月</span>2006 年 7 月</li>
-          <li><span class="label">院校</span>西南财经大学（211）</li>
-        </ul>
-      </header>
+  <body class="lang-zh">
+    <a class="skip-link" href="#main">Skip to content</a>
 
-      <section class="section">
-        <h2 class="section-title">
-          <span class="title-cn">教育背景</span>
-          <span class="title-en">Educational background</span>
-        </h2>
-        <div class="edu-block">
-          <div class="row-head">
-            <span class="period">2024.09 — 2028.06</span>
-            <span class="org">西南财经大学</span>
-            <span class="role">市场营销（金融服务与营销）</span>
+    <header class="site-header">
+      <div class="site-header-inner">
+        <a class="brand" href="#top">
+          <span class="brand-dot" aria-hidden="true"></span>
+          <span class="zh">陈怡天</span>
+          <span class="en">Yitian Chen</span>
+        </a>
+        <nav class="site-nav" aria-label="Primary">
+          <a href="#education"><span class="zh">教育背景</span><span class="en">Education</span></a>
+          <a href="#internships"><span class="zh">实习经历</span><span class="en">Internships</span></a>
+          <a href="#campus"><span class="zh">校园经历</span><span class="en">Campus</span></a>
+          <a href="#creative"><span class="zh">课外与获奖</span><span class="en">Awards</span></a>
+          <a href="#skills"><span class="zh">技能与评价</span><span class="en">Skills</span></a>
+        </nav>
+        <button type="button" class="lang-switch" id="lang-toggle" aria-pressed="false">
+          <span class="btn-zh" hidden>中文</span>
+          <span class="btn-en">English</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="page" id="top">
+      <main id="main">
+        <section class="hero-panel">
+          <div class="hero-top">
+            <img
+              class="hero-avatar"
+              src="avatar.png"
+              width="120"
+              height="120"
+              alt=""
+              decoding="async"
+            />
+            <div class="hero-intro">
+              <h1 class="hero-name">
+                <span class="zh">陈怡天</span>
+                <span class="en">Yitian Chen</span>
+              </h1>
+              <p class="hero-tagline">
+                <span class="zh">求职意向：实习生（AI 方向）</span>
+                <span class="en">Seeking: Internship (AI focus)</span>
+              </p>
+            </div>
           </div>
-          <p class="gpa">GPA：3.5（专业排名 20 / 120）</p>
-          <p class="courses">
-            <strong>主修课程：</strong
-            >概率论与数理统计、线性代数、计算机与大数据基础（91）、人工智能与现代科技（94）、数字化商业营销（90）、数字化品牌管理、会计学（95）、微观经济学（95）
-          </p>
-        </div>
-      </section>
-
-      <section class="section">
-        <h2 class="section-title">
-          <span class="title-cn">实习经历</span>
-          <span class="title-en">Internship experience</span>
-        </h2>
-
-        <article class="item">
-          <div class="row-head">
-            <span class="period">2025.07 — 2025.09</span>
-            <span class="org">铨丰环保科技公司</span>
-            <span class="role">电商运营</span>
-          </div>
-          <ul class="bullets">
+          <ul class="contact-chips">
             <li>
-              借助 AI 工具，通过 Coze 智能工作流抓取抖音、小红书等平台热卖商品帖子并分析评论，精准筛选热卖商品，自主联系 1688
-              工厂进行批发定制；最终选定男士蝴蝶颈链，店铺销量 100+。
+              <span class="label"><span class="zh">手机</span><span class="en">Phone</span></span>
+              <a href="tel:17846678576">17846678576</a>
             </li>
             <li>
-              运用即梦、可灵等 AI 生成式大模型制作产品图，经 AI 多轮优化，单个商品流量提升 50%+。
+              <span class="label"><span class="zh">邮箱</span><span class="en">Email</span></span>
+              <a href="mailto:cyt1527495869@163.com">cyt1527495869@163.com</a>
+            </li>
+            <li>
+              <span class="label"><span class="zh">籍贯</span><span class="en">Hometown</span></span>
+              <span class="zh">广东省深圳市</span>
+              <span class="en">Shenzhen, Guangdong</span>
+            </li>
+            <li>
+              <span class="label"><span class="zh">出生年月</span><span class="en">Birth</span></span>
+              <span class="zh">2006 年 7 月</span>
+              <span class="en">July 2006</span>
+            </li>
+            <li>
+              <span class="label"><span class="zh">院校</span><span class="en">University</span></span>
+              <span class="zh">西南财经大学（211）</span>
+              <span class="en">Southwestern University of Finance and Economics (211)</span>
             </li>
           </ul>
-        </article>
+        </section>
 
-        <article class="item">
-          <div class="row-head">
-            <span class="period">2025.03 — 2025.06</span>
-            <span class="org">新网银行</span>
-            <span class="role">AI 工具调研助理</span>
-          </div>
-          <ul class="bullets">
-            <li>
-              完成主流 AI 大模型与 AIGC 工具能力调研与选型评估，覆盖千问、文心一言、ChatGPT
-              等大语言模型，以及即梦、Stable Diffusion、通义万相等图像生成模型；基于评估选用 Stable
-              Diffusion、即梦开展 AIGC 图像创作，产出漫画推文、数字人素材等，全网累计播放量 50w+。
-            </li>
-            <li>
-              基于 Coze 平台低代码开发并部署 AI 智能体，通过工作流自动化抓取抖音、快手等平台流量数据，完成热点挖掘与趋势分析；结合热点产出数字人新闻播报内容，累计制作
-              50+ 条数字人视频，显著提升内容生产效率与传播效果。
-            </li>
-          </ul>
-        </article>
-
-        <article class="item">
-          <div class="row-head">
-            <span class="period">2024.12 — 2025.02</span>
-            <span class="org">深圳市富皇美运</span>
-            <span class="role">跨境电商运营</span>
-          </div>
-          <ul class="bullets">
-            <li>
-              负责跨境电商平台日常运营，涵盖产品上架、标题优化、详情页编辑与定价调整，有效提升产品曝光量与转化率。
-            </li>
-            <li>
-              熟练运用 Coze 搭建自动化工作流，借助 AI 抓取 Reddit 用户讨论数据，精准挖掘相机三脚架等品类市场需求痛点；经团队研判快速完成选品与铺货，助力项目实现
-              100w+ 营业额。
-            </li>
-          </ul>
-        </article>
-      </section>
-
-      <section class="section">
-        <h2 class="section-title">
-          <span class="title-cn">校园经历</span>
-          <span class="title-en">Campus experience</span>
-        </h2>
-
-        <article class="item">
-          <div class="row-head">
-            <span class="period">2025.09 — 2025.12</span>
-            <span class="org">省级大创项目 · 2025 香港大学生商业分析大赛</span>
-            <span class="role">产品设计</span>
-          </div>
-          <ul class="bullets">
-            <li>
-              依托赛题要求，运用 AI 技术划分智能处理与人机协作适用场景，团队设计 AI 前置、情绪触发、人工接入三层智能服务模型，从约
-              300 支队伍中晋级决赛（前 5%）。
-            </li>
-          </ul>
-        </article>
-
-        <article class="item">
-          <div class="row-head">
-            <span class="period">2024.09 — 2025.12</span>
-            <span class="org">校内项目团队</span>
-            <span class="role">技术部负责人</span>
-          </div>
-          <ul class="bullets">
-            <li>
-              辅助团队自主研发 AI 智能体，构建「茶旅灵枢」「茶境云图」；茶类推荐板块中龙井产品累计评论超 1.2K
-              条、铁观音 856 条，形成稳定口碑沉淀。
-            </li>
-            <li>团队目前已与 16 家茶叶生产基地达成初步合作。</li>
-          </ul>
-        </article>
-      </section>
-
-      <section class="section">
-        <h2 class="section-title">
-          <span class="title-cn">课外经历</span>
-          <span class="title-en">Creative experience</span>
-        </h2>
-        <ul class="bullets flat">
-          <li>运用 Kimi 等进行创意写作，在小红书产出多个热门帖，最高浏览量 15w+。</li>
-          <li>
-            <strong>竞赛获奖：</strong>2025 香港大学生商业分析大赛二等奖、2025 CMAU
-            市场研究与商业分析大赛四川省二等奖、2025 西南财经大学管理咨询大赛二等奖。
-          </li>
-        </ul>
-      </section>
-
-      <section class="section two-col">
-        <div class="col">
-          <h2 class="section-title">
-            <span class="title-cn">语言与技能</span>
-            <span class="title-en">Language &amp; skills</span>
+        <section class="section-block" id="education" tabindex="-1">
+          <h2 class="section-heading">
+            <span class="zh">教育背景</span>
+            <span class="en">Education</span>
           </h2>
-          <ul class="skill-list">
-            <li>
-              <strong>语言</strong>英语六级 552；雅思 7 分。
-            </li>
-            <li>
-              <strong>AI 相关</strong>具备 Coze、Trae、Stable Diffusion 工具部署与项目 vibe coding
-              开发经验；了解智能体发展历程。
-            </li>
-            <li>
-              <strong>产品与运营</strong>熟悉电商产品从选品到用户交付的全流程运营，具备数据化选品核心能力，擅长用数据驱动选品决策与全链路落地。
-            </li>
-          </ul>
-        </div>
-        <div class="col">
-          <h2 class="section-title">
-            <span class="title-cn">个人评价</span>
-            <span class="title-en">Self evaluation</span>
+          <div class="card-grid card-grid--1">
+            <article class="card">
+              <div class="card-visual card-visual--edu" aria-hidden="true">
+                <span class="card-visual-letter">S</span>
+              </div>
+              <div class="card-body">
+                <div class="card-meta">
+                  <time datetime="2024-09-01">2024.09 — 2028.06</time>
+                </div>
+                <h3 class="card-title">
+                  <span class="zh">西南财经大学</span>
+                  <span class="en">Southwestern University of Finance and Economics</span>
+                </h3>
+                <p class="card-role">
+                  <span class="zh">市场营销（金融服务与营销）</span>
+                  <span class="en">Marketing (Financial Services &amp; Marketing)</span>
+                </p>
+                <p class="card-lead zh">
+                  GPA 3.5，专业排名 20 / 120。主修涵盖统计、计算机与大数据、人工智能、数字化营销与经济学等。
+                </p>
+                <p class="card-lead en">
+                  GPA 3.5, ranked 20 / 120 in the major. Coursework spans statistics, computing &amp; big data, AI,
+                  digital marketing, and economics.
+                </p>
+                <div class="card-tags">
+                  <span>GPA 3.5</span>
+                  <span class="zh">大数据基础</span><span class="en">Big Data</span>
+                  <span>AI</span>
+                  <span class="zh">数字化营销</span><span class="en">Digital Marketing</span>
+                </div>
+                <details class="card-details">
+                  <summary>
+                    <span class="zh">查看详情</span>
+                    <span class="en">View details</span>
+                    <span class="chev" aria-hidden="true">→</span>
+                  </summary>
+                  <p class="zh">
+                    <strong>主修课程：</strong
+                    >概率论与数理统计、线性代数、计算机与大数据基础（91）、人工智能与现代科技（94）、数字化商业营销（90）、数字化品牌管理、会计学（95）、微观经济学（95）。
+                  </p>
+                  <p class="en">
+                    <strong>Key courses:</strong>
+                    Probability &amp; Statistics, Linear Algebra, Computer &amp; Big Data Foundations (91), AI &amp;
+                    Modern Technology (94), Digital Business Marketing (90), Digital Brand Management, Accounting (95),
+                    Microeconomics (95).
+                  </p>
+                </details>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section-block" id="internships" tabindex="-1">
+          <h2 class="section-heading">
+            <span class="zh">实习经历</span>
+            <span class="en">Internships</span>
           </h2>
-          <ul class="bullets flat eval">
-            <li>乐于尝试新鲜事物，对新知识、新领域抱有热情，愿意主动学习与探索。</li>
-            <li>做事踏实高效、不拖延，具备较强的执行力。</li>
-            <li>敢于跳出舒适区，勇于接受新挑战。</li>
-            <li>保持谦逊踏实，在后续工作中不断学习、快速成长。</li>
-          </ul>
-        </div>
-      </section>
+          <div class="card-grid">
+            <article class="card">
+              <div class="card-visual card-visual--ttc" aria-hidden="true">
+                <span class="card-visual-letter">T</span>
+              </div>
+              <div class="card-body">
+                <div class="card-meta">
+                  <time datetime="2025-10">2025.10</time><span> — </span><span class="zh">至今</span>
+                  <span class="en">Present</span>
+                </div>
+                <h3 class="card-title">
+                  <span class="zh">TTC 公司</span>
+                  <span class="en">TTC</span>
+                </h3>
+                <p class="card-role">
+                  <span class="zh">AI 方向实习生</span>
+                  <span class="en">AI Intern</span>
+                </p>
+                <p class="card-lead zh">
+                  独立搭建并开发简历优化类 Web 产品「小麦网站」，落地智能解析、内容润色与格式优化；参与自研产品 OpenMai
+                  的迭代，负责测试、prompt 调优与交互优化。
+                </p>
+                <p class="card-lead en">
+                  Independently built a resume-optimization web app (“Xiaomai”), shipping parsing, polishing, and layout
+                  features; contributed to OpenMai with QA, prompt tuning, and UX improvements.
+                </p>
+                <div class="card-tags">
+                  <span>Web</span>
+                  <span class="zh">简历</span><span class="en">Resume</span>
+                  <span>OpenMai</span>
+                  <span>Prompt</span>
+                  <span class="zh">产品</span><span class="en">Product</span>
+                </div>
+                <details class="card-details">
+                  <summary>
+                    <span class="zh">查看详情</span>
+                    <span class="en">View details</span>
+                    <span class="chev" aria-hidden="true">→</span>
+                  </summary>
+                  <ul class="card-list zh">
+                    <li>
+                      担任 TTC 公司 AI 方向实习生，独立搭建并开发简历优化类 Web 产品（小麦网站），落地简历智能解析、内容润色、格式优化等核心功能。
+                    </li>
+                    <li>
+                      参与公司自研 AI 产品 OpenMai 的产品优化与迭代，负责功能测试、prompt 调优、交互体验优化，有效提升产品响应准确率与用户使用体验。
+                    </li>
+                  </ul>
+                  <ul class="card-list en">
+                    <li>
+                      Served as an AI intern at TTC: independently built and shipped the “Xiaomai” resume web product with
+                      intelligent resume parsing, content polishing, and format optimization.
+                    </li>
+                    <li>
+                      Supported OpenMai iteration through functional testing, prompt tuning, and interaction refinements,
+                      improving response accuracy and overall user experience.
+                    </li>
+                  </ul>
+                </details>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="card-visual card-visual--a" aria-hidden="true">
+                <span class="card-visual-letter">Q</span>
+              </div>
+              <div class="card-body">
+                <div class="card-meta"><time>2025.07 — 2025.09</time></div>
+                <h3 class="card-title">
+                  <span class="zh">铨丰环保科技公司</span>
+                  <span class="en">Quanfeng Environmental Technology</span>
+                </h3>
+                <p class="card-role">
+                  <span class="zh">电商运营</span>
+                  <span class="en">E-commerce Operations</span>
+                </p>
+                <p class="card-lead zh">
+                  借助 Coze 工作流与 AIGC 工具完成选品、供应链对接与商品图优化，带动店铺销量与流量增长。
+                </p>
+                <p class="card-lead en">
+                  Used Coze workflows and AIGC tools for product selection, supplier coordination, and listing creative,
+                  driving sales and traffic growth.
+                </p>
+                <div class="card-tags">
+                  <span>Coze</span>
+                  <span class="zh">选品</span><span class="en">Merchandising</span>
+                  <span>Jimeng</span>
+                  <span>Kling</span>
+                </div>
+                <details class="card-details">
+                  <summary>
+                    <span class="zh">查看详情</span>
+                    <span class="en">View details</span>
+                    <span class="chev" aria-hidden="true">→</span>
+                  </summary>
+                  <ul class="card-list zh">
+                    <li>
+                      通过 Coze 抓取抖音、小红书热卖帖与评论，筛选商品并对接 1688 定制；选定男士蝴蝶颈链，店铺销量 100+。
+                    </li>
+                    <li>使用即梦、可灵生成产品图并经多轮优化，单商品流量提升 50%+。</li>
+                  </ul>
+                  <ul class="card-list en">
+                    <li>
+                      Built Coze workflows to scrape trending posts and comments on Douyin and Xiaohongshu, shortlisted
+                      products, and coordinated 1688 manufacturing; launched men’s butterfly choker — 100+ units sold.
+                    </li>
+                    <li>
+                      Produced product visuals with Jimeng and Kling; iterative AI refinement lifted single-SKU traffic
+                      by 50%+.
+                    </li>
+                  </ul>
+                </details>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="card-visual card-visual--b" aria-hidden="true">
+                <span class="card-visual-letter">X</span>
+              </div>
+              <div class="card-body">
+                <div class="card-meta"><time>2025.03 — 2025.06</time></div>
+                <h3 class="card-title">
+                  <span class="zh">新网银行</span>
+                  <span class="en">XW Bank</span>
+                </h3>
+                <p class="card-role">
+                  <span class="zh">AI 工具调研助理</span>
+                  <span class="en">AI Tools Research Assistant</span>
+                </p>
+                <p class="card-lead zh">
+                  大模型与 AIGC 工具调研选型；基于 Coze 搭建智能体与工作流，支撑热点分析与数字人内容生产。
+                </p>
+                <p class="card-lead en">
+                  Researched LLMs and AIGC tools; built Coze agents and workflows for trend analysis and digital-human
+                  content pipelines.
+                </p>
+                <div class="card-tags">
+                  <span>LLM</span>
+                  <span>AIGC</span>
+                  <span>Stable Diffusion</span>
+                  <span>Coze</span>
+                  <span class="zh">数字人</span><span class="en">Digital Human</span>
+                </div>
+                <details class="card-details">
+                  <summary>
+                    <span class="zh">查看详情</span>
+                    <span class="en">View details</span>
+                    <span class="chev" aria-hidden="true">→</span>
+                  </summary>
+                  <ul class="card-list zh">
+                    <li>
+                      调研千问、文心、ChatGPT、即梦、Stable Diffusion、通义万相等；选用 SD 与即梦产出漫画推文与数字人素材，全网播放 50w+。
+                    </li>
+                    <li>
+                      低代码部署智能体，自动抓取抖音、快手流量数据做热点挖掘；产出数字人新闻播报 50+ 条，提升产能与传播。
+                    </li>
+                  </ul>
+                  <ul class="card-list en">
+                    <li>
+                      Evaluated Qwen, ERNIE, ChatGPT, Jimeng, Stable Diffusion, Tongyi Wanxiang, etc.; shipped creatives
+                      and digital-human assets with SD &amp; Jimeng — 500k+ views across channels.
+                    </li>
+                    <li>
+                      Deployed agents to pull Douyin/Kuaishou traffic signals for trend mining; produced 50+ digital-human
+                      news clips, improving throughput and reach.
+                    </li>
+                  </ul>
+                </details>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="card-visual card-visual--c" aria-hidden="true">
+                <span class="card-visual-letter">F</span>
+              </div>
+              <div class="card-body">
+                <div class="card-meta"><time>2024.12 — 2025.02</time></div>
+                <h3 class="card-title">
+                  <span class="zh">深圳市富皇美运</span>
+                  <span class="en">Shenzhen Fuhuang Meiyun</span>
+                </h3>
+                <p class="card-role">
+                  <span class="zh">跨境电商运营</span>
+                  <span class="en">Cross-border E-commerce Operations</span>
+                </p>
+                <p class="card-lead zh">
+                  平台日常运营与上架优化；Coze + AI 抓取 Reddit 讨论，辅助选品，项目营业额突破 100w+。
+                </p>
+                <p class="card-lead en">
+                  Owned daily marketplace ops and listing optimization; Coze + AI mined Reddit discussions to inform
+                  merchandising — project revenue exceeded 1M+ RMB.
+                </p>
+                <div class="card-tags">
+                  <span class="zh">跨境电商</span><span class="en">Cross-border</span>
+                  <span>Coze</span>
+                  <span>Reddit</span>
+                  <span class="zh">选品</span><span class="en">Selection</span>
+                </div>
+                <details class="card-details">
+                  <summary>
+                    <span class="zh">查看详情</span>
+                    <span class="en">View details</span>
+                    <span class="chev" aria-hidden="true">→</span>
+                  </summary>
+                  <ul class="card-list zh">
+                    <li>负责上架、标题与详情优化、定价调整，提升曝光与转化。</li>
+                    <li>
+                      Coze 工作流抓取 Reddit 用户讨论，挖掘相机三脚架等痛点；团队快速选品铺货，助力 100w+ 营业额。
+                    </li>
+                  </ul>
+                  <ul class="card-list en">
+                    <li>Managed listings, copy, and pricing to lift impressions and conversion.</li>
+                    <li>
+                      Automated Reddit listening via Coze to surface demand signals (e.g. camera tripods); fast
+                      assortment execution contributed to 1M+ RMB GMV.
+                    </li>
+                  </ul>
+                </details>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section-block" id="campus" tabindex="-1">
+          <h2 class="section-heading">
+            <span class="zh">校园经历</span>
+            <span class="en">Campus</span>
+          </h2>
+          <div class="card-grid">
+            <article class="card">
+              <div class="card-visual card-visual--d" aria-hidden="true">
+                <span class="card-visual-letter">HK</span>
+              </div>
+              <div class="card-body">
+                <div class="card-meta"><time>2025.09 — 2025.12</time></div>
+                <h3 class="card-title">
+                  <span class="zh">省级大创 · 2025 香港大学生商业分析大赛</span>
+                  <span class="en">Provincial Innovation · 2025 HK University Business Analytics Competition</span>
+                </h3>
+                <p class="card-role">
+                  <span class="zh">产品设计</span>
+                  <span class="en">Product Design</span>
+                </p>
+                <p class="card-lead zh">
+                  划分人机协作场景，设计三层智能服务模型，自约 300 支队伍中晋级决赛（前 5%）。
+                </p>
+                <p class="card-lead en">
+                  Framed human–AI collaboration scenarios and a three-layer intelligent service model; advanced to the
+                  finals (~top 5%) among ~300 teams.
+                </p>
+                <div class="card-tags">
+                  <span class="zh">商业分析</span><span class="en">Analytics</span>
+                  <span>AI</span>
+                  <span class="zh">产品设计</span><span class="en">Product</span>
+                </div>
+                <details class="card-details">
+                  <summary>
+                    <span class="zh">查看详情</span>
+                    <span class="en">View details</span>
+                    <span class="chev" aria-hidden="true">→</span>
+                  </summary>
+                  <p class="zh">
+                    依托赛题，运用 AI 划分智能处理与人机协作边界，团队提出 AI 前置、情绪触发、人工接入三层模型并落地于方案设计。
+                  </p>
+                  <p class="en">
+                    Applied AI to separate automated vs. human-assisted paths; team delivered a three-tier model (AI
+                    frontline, emotion triggers, human escalation) in the competition solution.
+                  </p>
+                </details>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="card-visual card-visual--e" aria-hidden="true">
+                <span class="card-visual-letter">T</span>
+              </div>
+              <div class="card-body">
+                <div class="card-meta"><time>2024.09 — 2025.12</time></div>
+                <h3 class="card-title">
+                  <span class="zh">校内项目团队</span>
+                  <span class="en">Campus Project Team</span>
+                </h3>
+                <p class="card-role">
+                  <span class="zh">技术部负责人</span>
+                  <span class="en">Head of Technology</span>
+                </p>
+                <p class="card-lead zh">
+                  参与自研茶类 AI 智能体与产品模块；沉淀用户口碑并与多家茶产地建立合作。
+                </p>
+                <p class="card-lead en">
+                  Co-built tea-domain AI agents and product modules; grew UGC proof points and partnerships with tea
+                  producers.
+                </p>
+                <div class="card-tags">
+                  <span class="zh">智能体</span><span class="en">Agents</span>
+                  <span class="zh">产品</span><span class="en">Product</span>
+                  <span class="zh">合作拓展</span><span class="en">Partnerships</span>
+                </div>
+                <details class="card-details">
+                  <summary>
+                    <span class="zh">查看详情</span>
+                    <span class="en">View details</span>
+                    <span class="chev" aria-hidden="true">→</span>
+                  </summary>
+                  <ul class="card-list zh">
+                    <li>
+                      构建「茶旅灵枢」「茶境云图」等模块；龙井评论超 1.2K、铁观音 856 条，形成口碑沉淀。
+                    </li>
+                    <li>团队已与 16 家茶叶生产基地达成初步合作。</li>
+                  </ul>
+                  <ul class="card-list en">
+                    <li>
+                      Shipped modules such as “Tea Travel Hub” and “Tea Realm Cloud Map”; Longjing reviews exceeded 1.2k,
+                      Tieguanyin 856 — strong social proof.
+                    </li>
+                    <li>Established preliminary cooperation with 16 tea production bases.</li>
+                  </ul>
+                </details>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section-block" id="creative" tabindex="-1">
+          <h2 class="section-heading">
+            <span class="zh">课外与获奖</span>
+            <span class="en">Extracurricular &amp; Awards</span>
+          </h2>
+          <div class="card-grid card-grid--1">
+            <article class="card">
+              <div class="card-visual card-visual--f" aria-hidden="true">
+                <span class="card-visual-letter">★</span>
+              </div>
+              <div class="card-body">
+                <div class="card-meta"><span class="zh">持续</span><span class="en">Ongoing</span></div>
+                <h3 class="card-title">
+                  <span class="zh">内容创作与竞赛</span>
+                  <span class="en">Content &amp; Competitions</span>
+                </h3>
+                <p class="card-role">
+                  <span class="zh">创意写作 · 商赛</span>
+                  <span class="en">Creative writing · Case comps</span>
+                </p>
+                <p class="card-lead zh">
+                  使用 Kimi 等工具进行创意写作，小红书多篇热门帖，最高浏览 15w+；多项省级/区域赛获奖。
+                </p>
+                <p class="card-lead en">
+                  Creative writing with tools like Kimi; multiple viral Xiaohongshu posts (peak 150k+ views); several
+                  provincial/regional awards.
+                </p>
+                <div class="card-tags">
+                  <span>Kimi</span>
+                  <span class="zh">小红书</span><span class="en">XHS</span>
+                  <span class="zh">商赛</span><span class="en">Competition</span>
+                </div>
+                <details class="card-details">
+                  <summary>
+                    <span class="zh">查看详情</span>
+                    <span class="en">View details</span>
+                    <span class="chev" aria-hidden="true">→</span>
+                  </summary>
+                  <p class="zh">
+                    <strong>竞赛获奖：</strong>2025 香港大学生商业分析大赛二等奖；2025 CMAU 市场研究与商业分析大赛四川省二等奖；2025
+                    西南财经大学管理咨询大赛二等奖。
+                  </p>
+                  <p class="en">
+                    <strong>Awards:</strong>
+                    Second Prize, 2025 Hong Kong University Business Analytics Competition; Second Prize, 2025 CMAU
+                    Market Research &amp; Business Analytics (Sichuan); Second Prize, 2025 SWUFE Management Consulting
+                    Competition.
+                  </p>
+                </details>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section-block" id="skills" tabindex="-1">
+          <h2 class="section-heading">
+            <span class="zh">技能与个人评价</span>
+            <span class="en">Skills &amp; Profile</span>
+          </h2>
+          <div class="card-grid">
+            <article class="card card--plain">
+              <div class="card-body card-body--full">
+                <h3 class="card-title card-title--sm">
+                  <span class="zh">语言与技能</span>
+                  <span class="en">Languages &amp; skills</span>
+                </h3>
+                <ul class="skill-blocks">
+                  <li>
+                    <strong><span class="zh">语言</span><span class="en">Languages</span></strong>
+                    <span class="zh">英语六级 552；雅思 7 分。</span>
+                    <span class="en">CET-6: 552; IELTS: 7.</span>
+                  </li>
+                  <li>
+                    <strong><span class="zh">AI 相关</span><span class="en">AI</span></strong>
+                    <span class="zh">Coze、Trae、Stable Diffusion 部署与 vibe coding 项目经验；了解智能体发展脉络。</span>
+                    <span class="en">Hands-on with Coze, Trae, and Stable Diffusion deployment plus vibe-coding projects; familiar with agent evolution.</span>
+                  </li>
+                  <li>
+                    <strong><span class="zh">产品与运营</span><span class="en">Product &amp; ops</span></strong>
+                    <span class="zh">熟悉电商从选品到交付的全链路；数据化选品与落地执行，擅长用数据驱动决策。</span>
+                    <span class="en">End-to-end e-commerce from selection to fulfillment; data-driven merchandising and execution.</span>
+                  </li>
+                </ul>
+              </div>
+            </article>
+            <article class="card card--plain">
+              <div class="card-body card-body--full">
+                <h3 class="card-title card-title--sm">
+                  <span class="zh">个人评价</span>
+                  <span class="en">About me</span>
+                </h3>
+                <ul class="card-list eval-list">
+                  <li class="zh">乐于尝试新事物，主动学习探索。</li>
+                  <li class="en">Curious and proactive about learning new domains.</li>
+                  <li class="zh">踏实高效，执行力强。</li>
+                  <li class="en">Reliable, efficient, and strong execution.</li>
+                  <li class="zh">敢于接受挑战，持续自我迭代。</li>
+                  <li class="en">Comfortable leaving the comfort zone; continuous improvement.</li>
+                  <li class="zh">保持谦逊，在工作中快速成长。</li>
+                  <li class="en">Humble mindset with fast growth in professional settings.</li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </section>
+      </main>
 
       <footer class="footer">
-        <p>本页根据个人简历整理 · 陈怡天</p>
+        <p class="zh">本页为个人简历展示 · 陈怡天</p>
+        <p class="en">Personal resume · Yitian Chen</p>
       </footer>
     </div>
+
+    <script src="main.js" defer></script>
   </body>
 </html>
