@@ -471,6 +471,17 @@ html.lang-en .name-en {
 
 .hero-id a:hover { text-decoration: underline; }
 
+.site-link { overflow-wrap: anywhere; }
+
+.site-link-row { margin-top: 0.85rem; }
+
+.site-link-lg {
+  color: var(--gold-soft);
+  font-size: clamp(0.95rem, 2vw, 1.2rem);
+  font-weight: 600;
+  text-underline-offset: 0.18em;
+}
+
 .avatar {
   width: 68px;
   height: 68px;
