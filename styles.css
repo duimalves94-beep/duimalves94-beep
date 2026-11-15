@@ -863,13 +863,11 @@ html.js .reveal.is-in {
   grid-template-areas:
     "douyin"
     "xhs"
-    "eco"
     "nmixx";
 }
 
 .area-douyin { grid-area: douyin; }
 .area-xhs { grid-area: xhs; }
-.area-eco { grid-area: eco; }
 .area-nmixx { grid-area: nmixx; }
 
 @media (min-width: 900px) {
@@ -877,7 +875,6 @@ html.js .reveal.is-in {
     grid-template-columns: 1.35fr 1fr;
     grid-template-areas:
       "douyin xhs"
-      "douyin eco"
       "nmixx nmixx";
   }
 }
