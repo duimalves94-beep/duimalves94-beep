@@ -863,19 +863,21 @@ html.js .reveal.is-in {
   grid-template-areas:
     "douyin"
     "xhs"
-    "nmixx";
+    "nmixx"
+    "meme";
 }
 
 .area-douyin { grid-area: douyin; }
 .area-xhs { grid-area: xhs; }
 .area-nmixx { grid-area: nmixx; }
+.area-meme { grid-area: meme; }
 
 @media (min-width: 900px) {
   .work-grid {
     grid-template-columns: 1.35fr 1fr;
     grid-template-areas:
       "douyin xhs"
-      "nmixx nmixx";
+      "nmixx meme";
   }
 }
 
