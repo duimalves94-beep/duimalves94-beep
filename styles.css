@@ -528,6 +528,7 @@ html.lang-en .name-en {
   right: 0;
   bottom: calc(var(--ground-h) - var(--surface) - 8px);
   height: 0;
+  z-index: 2;
 }
 
 @media (min-width: 860px) {
@@ -608,10 +609,10 @@ html.lang-en .critter-name { font-family: var(--round); font-weight: 600; }
 .critter .c-happy { opacity: 0; }
 .critter:hover .c-happy,
 .critter:focus-visible .c-happy,
-.critter.is-jump .c-happy { opacity: 1; }
+.critter.is-joy .c-happy { opacity: 1; }
 .critter:hover .c-eyes,
 .critter:focus-visible .c-eyes,
-.critter.is-jump .c-eyes { opacity: 0; }
+.critter.is-joy .c-eyes { opacity: 0; }
 
 .critter .c-body,
 .critter .c-head,
@@ -628,6 +629,39 @@ html.lang-en .critter-name { font-family: var(--round); font-weight: 600; }
 .critter .eye { transform-origin: 50% 50%; }
 .critter .c-sprout { transform-origin: 20% 100%; }
 .critter .c-scarf-tail { transform-origin: 0% 20%; }
+.critter .wool, .critter .blush { transform-box: fill-box; transform-origin: 50% 50%; }
+.critter .blush { transition: opacity 0.2s ease, transform 0.2s ease; }
+.critter:hover .blush,
+.critter.is-joy .blush { opacity: 0.95; transform: scale(1.25); }
+
+/* heart bubbles */
+.heart {
+  position: absolute;
+  left: var(--x, 50%);
+  bottom: 86%;
+  z-index: 7;
+  width: var(--s, 18px);
+  height: var(--s, 18px);
+  margin-left: calc(var(--s, 18px) / -2);
+  pointer-events: none;
+  opacity: 0;
+  animation: heart-up var(--dur, 1.8s) cubic-bezier(.25, .6, .4, 1) var(--delay, 0s) forwards;
+}
+
+.heart svg { display: block; width: 100%; height: 100%; overflow: visible; }
+
+@keyframes heart-up {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.3) rotate(0deg); }
+  14% { opacity: 1; transform: translate(calc(var(--dx, 0px) * 0.2), -14px) scale(1.1) rotate(var(--r, 0deg)); }
+  55% { opacity: 1; transform: translate(calc(var(--dx, 0px) * 0.7), -80px) scale(1) rotate(calc(var(--r, 0deg) * -1)); }
+  100% { opacity: 0; transform: translate(var(--dx, 0px), var(--rise, -150px)) scale(0.85) rotate(var(--r, 0deg)); }
+}
+
+@keyframes heart-fade {
+  0% { opacity: 0; }
+  20%, 70% { opacity: 1; }
+  100% { opacity: 0; }
+}
 
 .critter:hover .c-head,
 .critter:focus-visible .c-head { transform: rotate(-6deg) translateY(-2px); }
@@ -647,9 +681,16 @@ html.lang-en .critter-name { font-family: var(--round); font-weight: 600; }
   .critter-peek .eye { animation-delay: -0.9s; }
 
   .critter:hover .critter-svg { animation: wiggle 0.5s ease-in-out; }
-  .critter.is-jump .critter-svg { animation: hop 0.62s cubic-bezier(.3, .7, .4, 1); }
-  .critter.is-jump .c-paw { animation: wave 0.62s ease-in-out 2; }
-  .critter-peek.is-jump .critter-svg { animation: pop 0.62s cubic-bezier(.3, .7, .4, 1); }
+  /* distinct happy reactions */
+  .critter-cat.is-joy .critter-svg { animation: cat-joy 0.9s cubic-bezier(.3, .7, .4, 1); }
+  .critter-cat.is-joy .c-tail { animation: tail 0.22s ease-in-out 6; }
+  .critter-cat.is-joy .c-paw,
+  .critter-peek.is-joy .c-paw { animation: wave 0.45s ease-in-out 3; }
+  .critter-sheep.is-joy .critter-svg { animation: sheep-joy 0.95s cubic-bezier(.3, .7, .4, 1); }
+  .critter-sheep.is-joy .wool { animation: puff 0.95s ease-in-out; }
+  .critter-acorn.is-joy .critter-svg { animation: acorn-joy 0.85s cubic-bezier(.3, .7, .4, 1); }
+  .critter-peek.is-joy .critter-svg { animation: pop 0.7s cubic-bezier(.3, .7, .4, 1); }
+  .critter.is-joy .critter-svg { transform-origin: 50% 70%; }
 }
 
 @keyframes breathe { 0%, 100% { transform: scale(1, 1); } 50% { transform: scale(1.015, 1.03); } }
@@ -673,14 +714,40 @@ html.lang-en .critter-name { font-family: var(--round); font-weight: 600; }
   40% { transform: translateY(-22%); }
   100% { transform: translateY(0); }
 }
+@keyframes cat-joy {
+  0% { transform: translateY(0) scale(1, 1); }
+  14% { transform: translateY(0) scale(1.12, 0.86); }
+  32% { transform: translateY(-30%) scaleX(1); }
+  46% { transform: translateY(-36%) scaleX(-1); }
+  60% { transform: translateY(-30%) scaleX(1); }
+  80% { transform: translateY(0) scale(1.1, 0.9); }
+  100% { transform: translateY(0) scale(1, 1); }
+}
+@keyframes sheep-joy {
+  0%, 100% { transform: translateY(0) scale(1, 1); }
+  15% { transform: translateY(0) scale(1.14, 0.84); }
+  35% { transform: translateY(-24%) scale(0.95, 1.06); }
+  52% { transform: translateY(0) scale(1.12, 0.88); }
+  70% { transform: translateY(-12%) scale(0.97, 1.03); }
+  86% { transform: translateY(0) scale(1.05, 0.95); }
+}
+@keyframes puff { 0%, 100% { transform: scale(1); } 30% { transform: scale(1.16); } 55% { transform: scale(1.06); } 75% { transform: scale(1.12); } }
+@keyframes acorn-joy {
+  0% { transform: translateY(0) rotate(0deg); }
+  18% { transform: translateY(0) scale(1.1, 0.88); }
+  55% { transform: translateY(-60%) rotate(200deg); }
+  85% { transform: translateY(0) rotate(360deg) scale(1.08, 0.92); }
+  100% { transform: translateY(0) rotate(360deg); }
+}
 @keyframes wave { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-150deg) translateY(-6px); } }
 
 /* speech bubble — always at the character's top-right */
 .bubble {
   --shift: 0px;
+  --lift: 0px;
   position: absolute;
   left: 72%;
-  bottom: 84%;
+  bottom: calc(84% + var(--lift));
   z-index: 6;
   width: max-content;
   max-width: min(230px, 62vw);
@@ -708,23 +775,23 @@ html.lang-en .bubble { font-family: var(--round); font-weight: 500; font-size: 0
   content: "";
   position: absolute;
   left: calc(10px - var(--shift));
-  bottom: -14px;
+  bottom: calc(-14px - var(--lift));
   width: 0;
   height: 0;
   border-style: solid;
-  border-width: 14px 14px 0 0;
+  border-width: calc(14px + var(--lift)) 14px 0 0;
 }
 
 .bubble::before { border-color: var(--line-ink) transparent transparent transparent; }
-.bubble::after { left: calc(13px - var(--shift)); bottom: -8px; border-width: 9px 9px 0 0; border-color: var(--card) transparent transparent transparent; }
+.bubble::after { left: calc(13px - var(--shift)); bottom: calc(-8px - var(--lift) * 0.92); border-width: calc(9px + var(--lift) * 0.92) 9px 0 0; border-color: var(--card) transparent transparent transparent; }
 
 .bubble.is-on { opacity: 1; transform: translate(var(--shift), 0) scale(1); }
 
 /* foreground bushes */
 .bush {
   position: absolute;
-  bottom: calc(var(--strip) - 18px);
-  z-index: 4;
+  bottom: -18px;
+  z-index: 1;
   width: clamp(150px, 24vw, 330px);
   aspect-ratio: 340 / 360;
   pointer-events: none;
@@ -736,7 +803,7 @@ html.lang-en .bubble { font-family: var(--round); font-weight: 500; font-size: 0
 .bush-r { right: -40px; }
 
 @media (max-width: 859px) {
-  .bush { width: 130px; bottom: calc(var(--strip) - 10px); }
+  .bush { width: 130px; bottom: -10px; }
   .bush-l { display: none; }
   .bush-r { right: -56px; }
 }
@@ -1431,7 +1498,7 @@ html.lang-en .lang-meters .lang-word {
   z-index: 2;
 }
 
-.cw-peek .bubble { left: 80%; bottom: 70%; }
+.cw-peek .bubble { left: 80%; bottom: calc(70% + var(--lift)); }
 
 .critter-peek .critter-svg {
   filter: drop-shadow(2.5px 0 0 #f5ecd7) drop-shadow(-2.5px 0 0 #f5ecd7) drop-shadow(0 -2.5px 0 #f5ecd7);
@@ -1479,6 +1546,7 @@ html.lang-en .lang-meters .lang-word {
   .tilt-card { transition: none; }
   .bubble { transition: opacity 0.15s ease; transform: translate(var(--shift), 0); }
   .mote { display: none; }
+  .heart { animation-name: heart-fade; transform: translateY(var(--still, -30px)); }
 }
 
 @media print {

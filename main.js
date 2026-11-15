@@ -269,87 +269,180 @@ function initForest() {
   kick();
 }
 
-/* ---------- forest friends: hover, tap, speech bubbles ---------- */
-const CRITTER_LINES = {
+/* ---------- forest friends: auto chatter, joy on tap, heart bubbles ---------- */
+const AUTO_LINES = {
   zh: [
     "你好，我叫陈怡天",
-    "往下滑，看看我的实习经历吧～",
-    "我的抖音视频单条 500 万+ 播放哦！",
-    "「创作」里有两个我做的互动网页～",
-    "想聊聊？邮箱就在页面最下面！"
+    "HR 捞捞我吧～",
+    "HR，我会认真努力工作，请给我一次面试机会吧，谢谢！",
+    "我学东西超快的！",
+    "内容运营、AIGC，我都可以！",
+    "简历往下滑还有更多哦～",
+    "看到这里了，要不要约个面试？",
+    "点点我们，有惊喜哦～"
   ],
   en: [
     "Hi, I'm Chen Yitian",
-    "Scroll down to see my internships~",
-    "One of my Douyin videos hit 5M+ views!",
-    "Two live web projects wait in “Work”~",
-    "Want to chat? My email is at the bottom!"
+    "HR, scoop me up~",
+    "HR, I'll work hard and give it my all. Please give me an interview — thank you!",
+    "I learn super fast!",
+    "Content ops, AIGC — I can do both!",
+    "Scroll down, there's more in my resume~",
+    "Made it this far? How about an interview?",
+    "Tap us for a surprise~"
   ]
 };
-const PEEK_LINES = {
-  zh: ["你好，我叫陈怡天", "发邮件给我吧，我会认真回复～", "谢谢你看完我的简历！"],
-  en: ["Hi, I'm Chen Yitian", "Drop me an email — I'll reply soon~", "Thanks for reading my resume!"]
+const THANK_LINES = {
+  zh: ["谢谢 HR！❤", "被捞到啦！好开心～", "我会好好表现的！", "耶！今天也元气满满！", "期待和你见面哦～"],
+  en: ["Thank you, HR! ❤", "Yay, I got scooped up!", "I'll do my very best!", "Yay! Full of energy today!", "Can't wait to meet you~"]
 };
+const HEART_COLORS = ["#e8546b", "#f27a8f", "#ff9eb0", "#d93b55", "#ffb7c5", "#f05d7a"];
+const AUTO_EVERY = 3800;
+const AUTO_SHOW = 3300;
+const CLICK_HOLD = 4200;
 
 function initCritters() {
   const buttons = Array.from(document.querySelectorAll(".critter"));
   if (!buttons.length) return;
   const live = document.getElementById("critter-live");
   const state = new Map();
+  const visible = new Set();
+  let lineIndex = -1;
+  let lastSpeaker = -1;
+  let loopTimer = 0;
+  let thankIndex = -1;
 
-  function linesFor(btn) {
-    const set = btn.dataset.critter === "peek" ? PEEK_LINES : CRITTER_LINES;
-    return isEnglish() ? set.en : set.zh;
-  }
+  function lang() { return isEnglish() ? "en" : "zh"; }
+  function bubbleOf(btn) { return btn.closest(".critter-wrap").querySelector(".bubble"); }
 
+  // keep the bubble on screen; measured from layout
+  // (not getBoundingClientRect) so the pop-in scale doesn't skew it
   function fit(bubble) {
     bubble.style.setProperty("--shift", "0px");
-    const r = bubble.getBoundingClientRect();
-    const over = r.right - (document.documentElement.clientWidth - 8);
+    bubble.style.setProperty("--lift", "0px");
+    const wrapRect = bubble.parentElement.getBoundingClientRect();
+    const left = wrapRect.left + bubble.offsetLeft;
+    const limit = document.documentElement.clientWidth - 8;
+    const over = left + bubble.offsetWidth - limit;
     if (over > 0) bubble.style.setProperty("--shift", -Math.ceil(over) + "px");
+    // pushed far left = it would sit on a neighbour's head, so float it higher on a longer tail
+    if (over > 60) bubble.style.setProperty("--lift", Math.round(Math.min(64, over * 0.34)) + "px");
   }
 
-  function say(btn, index, announce) {
-    const wrap = btn.closest(".critter-wrap");
-    const bubble = wrap && wrap.querySelector(".bubble");
-    if (!bubble) return;
-    const s = state.get(btn);
-    const lines = linesFor(btn);
-    // one voice at a time
-    document.querySelectorAll(".bubble.is-on").forEach(function (other) {
-      if (other !== bubble) other.classList.remove("is-on");
+  function hideAll(except) {
+    document.querySelectorAll(".bubble.is-on").forEach(function (b) {
+      if (b !== except) b.classList.remove("is-on");
     });
-    s.index = index % lines.length;
-    bubble.querySelector(".bubble-text").textContent = lines[s.index];
+  }
+
+  // show one line; `ref` = { set, index } so it can be re-rendered on language switch
+  function say(btn, set, index, ms, announce) {
+    const bubble = bubbleOf(btn);
+    const s = state.get(btn);
+    hideAll(bubble);
+    s.ref = { set: set, index: index };
+    const text = set[lang()][index];
+    bubble.querySelector(".bubble-text").textContent = text;
+    bubble.classList.remove("is-on");
+    void bubble.offsetWidth; // replay the pop-in
     bubble.classList.add("is-on");
     fit(bubble);
-    if (announce && live) live.textContent = lines[s.index];
+    if (announce && live) live.textContent = text;
     clearTimeout(s.timer);
-    s.timer = setTimeout(function () {
-      bubble.classList.remove("is-on");
-    }, 4200);
+    s.timer = setTimeout(function () { bubble.classList.remove("is-on"); }, ms);
   }
 
-  function hop(btn) {
-    btn.classList.remove("is-jump");
+  /* --- the endless, one-at-a-time chatter loop --- */
+  function canRun() { return !document.hidden && visible.size > 0; }
+
+  function tick() {
+    loopTimer = 0;
+    if (!canRun()) { hideAll(null); return; }
+    let next = -1;
+    for (let k = 1; k <= buttons.length; k++) {
+      const idx = (lastSpeaker + k) % buttons.length;
+      if (visible.has(buttons[idx])) { next = idx; break; }
+    }
+    if (next < 0) return;
+    lastSpeaker = next;
+    lineIndex = (lineIndex + 1) % AUTO_LINES.zh.length;
+    say(buttons[next], AUTO_LINES, lineIndex, AUTO_SHOW, false);
+    schedule(AUTO_EVERY);
+  }
+
+  function schedule(ms) {
+    clearTimeout(loopTimer);
+    loopTimer = 0;
+    if (canRun()) loopTimer = setTimeout(tick, ms);
+  }
+
+  /* --- joy: happy eyes, blush, a character-specific hop, and hearts --- */
+  function hearts(btn) {
+    const wrap = btn.closest(".critter-wrap");
+    const count = reduceMotion ? 4 : 9;
+    for (let n = 0; n < count; n++) {
+      const h = document.createElement("span");
+      h.className = "heart";
+      h.setAttribute("aria-hidden", "true");
+      const size = 13 + Math.round(Math.random() * 17);
+      const color = HEART_COLORS[Math.floor(Math.random() * HEART_COLORS.length)];
+      h.style.setProperty("--s", size + "px");
+      h.style.setProperty("--x", (22 + Math.random() * 56).toFixed(1) + "%");
+      h.style.setProperty("--dx", Math.round((Math.random() - 0.5) * 110) + "px");
+      h.style.setProperty("--rise", -(110 + Math.round(Math.random() * 90)) + "px");
+      h.style.setProperty("--r", Math.round((Math.random() - 0.5) * 40) + "deg");
+      h.style.setProperty("--dur", (1.5 + Math.random() * 0.9).toFixed(2) + "s");
+      h.style.setProperty("--delay", (n * 0.07).toFixed(2) + "s");
+      h.style.setProperty("--still", -(10 + Math.round(Math.random() * 60)) + "px");
+      h.innerHTML = '<svg viewBox="0 0 24 22"><path d="M12 20.5C5 15.6 1.5 12 1.5 7.4 1.5 4.2 4 1.8 7 1.8c2.1 0 3.8 1.1 5 2.9 1.2-1.8 2.9-2.9 5-2.9 3 0 5.5 2.4 5.5 5.6 0 4.6-3.5 8.2-10.5 13.1Z" fill="' + color + '" stroke="#5a2430" stroke-width="1.6" stroke-linejoin="round"/><ellipse cx="7.2" cy="6.6" rx="2" ry="1.3" fill="#fff" opacity=".75" transform="rotate(-30 7.2 6.6)"/></svg>';
+      h.addEventListener("animationend", function () { h.remove(); });
+      wrap.appendChild(h);
+    }
+  }
+
+  function joy(btn) {
+    const s = state.get(btn);
+    btn.classList.remove("is-joy");
     void btn.offsetWidth;
-    btn.classList.add("is-jump");
-    clearTimeout(state.get(btn).hopTimer);
-    state.get(btn).hopTimer = setTimeout(function () {
-      btn.classList.remove("is-jump");
-    }, reduceMotion ? 400 : 1300);
+    btn.classList.add("is-joy");
+    clearTimeout(s.joyTimer);
+    s.joyTimer = setTimeout(function () { btn.classList.remove("is-joy"); }, 1600);
+    hearts(btn);
   }
 
-  buttons.forEach(function (btn) {
-    state.set(btn, { index: -1, timer: 0, hopTimer: 0 });
+  buttons.forEach(function (btn, i) {
+    state.set(btn, { timer: 0, joyTimer: 0, ref: null });
     btn.addEventListener("click", function () {
-      const s = state.get(btn);
-      const bubble = btn.closest(".critter-wrap").querySelector(".bubble");
-      // a fresh tap always opens with the greeting; quick repeat taps cycle the other lines
-      const next = bubble.classList.contains("is-on") ? s.index + 1 : 0;
-      hop(btn);
-      say(btn, next, true);
+      joy(btn);
+      thankIndex = (thankIndex + 1) % THANK_LINES.zh.length;
+      say(btn, THANK_LINES, thankIndex, CLICK_HOLD - 400, true);
+      lastSpeaker = i;
+      schedule(CLICK_HOLD); // resume the chatter afterwards
     });
+  });
+
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver(function (entries) {
+      const wasIdle = !canRun();
+      entries.forEach(function (e) {
+        const btn = e.target.querySelector(".critter");
+        if (e.isIntersecting) visible.add(btn);
+        else {
+          visible.delete(btn);
+          bubbleOf(btn).classList.remove("is-on");
+        }
+      });
+      if (wasIdle && canRun() && !loopTimer) schedule(lineIndex < 0 ? 900 : 600);
+      if (!canRun()) { clearTimeout(loopTimer); loopTimer = 0; }
+    }, { threshold: 0.6 });
+    buttons.forEach(function (btn) { io.observe(btn.closest(".critter-wrap")); });
+  } else {
+    buttons.forEach(function (btn) { visible.add(btn); });
+  }
+
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) { clearTimeout(loopTimer); loopTimer = 0; hideAll(null); }
+    else schedule(600);
   });
 
   function relabel() {
@@ -357,9 +450,9 @@ function initCritters() {
     buttons.forEach(function (btn) {
       btn.setAttribute("aria-label", en ? btn.dataset.labelEn : btn.dataset.labelZh);
       const s = state.get(btn);
-      const bubble = btn.closest(".critter-wrap").querySelector(".bubble");
-      if (bubble.classList.contains("is-on")) {
-        bubble.querySelector(".bubble-text").textContent = linesFor(btn)[s.index];
+      const bubble = bubbleOf(btn);
+      if (s.ref && bubble.classList.contains("is-on")) {
+        bubble.querySelector(".bubble-text").textContent = s.ref.set[lang()][s.ref.index];
         fit(bubble);
       }
     });
@@ -371,14 +464,7 @@ function initCritters() {
     document.querySelectorAll(".bubble.is-on").forEach(fit);
   });
 
-  // greet once on load
-  const cat = document.querySelector(".critter-cat");
-  if (cat) {
-    setTimeout(function () {
-      if (!reduceMotion) hop(cat);
-      say(cat, 0, false);
-    }, 900);
-  }
+  // the loop starts once a character is on screen: first line is "你好，我叫陈怡天"
 }
 
 initLang();
