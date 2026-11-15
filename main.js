@@ -1,6 +1,5 @@
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const finePointer = window.matchMedia("(pointer: fine)").matches;
-const THREE_URL = "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js";
 
 function isEnglish() {
   return document.documentElement.classList.contains("lang-en");
@@ -208,318 +207,178 @@ function initTilt() {
   });
 }
 
-async function init3D() {
-  if (reduceMotion) return;
-  const canvas = document.getElementById("hero-canvas");
+/* ---------- hand-drawn forest: soft parallax ---------- */
+function initForest() {
   const hero = document.querySelector(".hero");
-  if (!canvas || !hero) return;
-
-  const loader = import(THREE_URL);
-  const timeout = new Promise(function (_, reject) {
-    setTimeout(function () { reject(new Error("timeout")); }, 8000);
+  if (!hero) return;
+  const layers = Array.from(hero.querySelectorAll("[data-depth]")).map(function (el) {
+    return { el: el, depth: Number(el.dataset.depth) || 0 };
   });
-  let THREE;
-  try {
-    THREE = await Promise.race([loader, timeout]);
-  } catch (e) {
-    loader.catch(function () {});
-    return;
-  }
+  if (reduceMotion || !layers.length) return;
+  document.documentElement.classList.add("forest-live");
 
-  let renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({
-      canvas: canvas,
-      alpha: true,
-      antialias: window.innerWidth >= 800,
-      powerPreference: "high-performance",
-    });
-  } catch (e) {
-    return;
-  }
-  if (!renderer.getContext()) {
-    renderer.dispose();
-    return;
-  }
-
-  renderer.setClearColor(0x000000, 0);
-  if (THREE.SRGBColorSpace) renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
-
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 50);
-  camera.position.set(0, 0, 6.4);
-
-  const group = new THREE.Group();
-  scene.add(group);
-
-  scene.add(new THREE.HemisphereLight(0xe7f3d4, 0x1a3324, 1.7));
-  const key = new THREE.DirectionalLight(0xfff8e8, 2.4);
-  key.position.set(3.2, 5.4, 4);
-  scene.add(key);
-  const fill = new THREE.DirectionalLight(0x9dcc78, 1.1);
-  fill.position.set(-4, 2, -2);
-  scene.add(fill);
-
-  const mobile = window.matchMedia("(max-width: 760px)").matches;
-  const bark = new THREE.MeshStandardMaterial({ color: 0x5a4030, roughness: 0.92, flatShading: true });
-  const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.38, 0.95, 7), bark);
-  trunk.position.y = -1.15;
-  const root = new THREE.Mesh(new THREE.SphereGeometry(0.28, 8, 6), bark);
-  root.position.y = -1.58;
-  root.scale.set(1.5, 0.45, 1.5);
-  group.add(trunk, root);
-
-  const foliageColors = [
-    new THREE.MeshStandardMaterial({ color: 0x3d8f4c, emissive: 0x14321c, emissiveIntensity: 0.35, roughness: 0.78, flatShading: true }),
-    new THREE.MeshStandardMaterial({ color: 0x5aaa5c, emissive: 0x1a4024, emissiveIntensity: 0.3, roughness: 0.74, flatShading: true }),
-    new THREE.MeshStandardMaterial({ color: 0x8fce78, emissive: 0x245c30, emissiveIntensity: 0.22, roughness: 0.7, flatShading: true }),
-    new THREE.MeshStandardMaterial({ color: 0xc6e89a, emissive: 0x2f6a38, emissiveIntensity: 0.15, roughness: 0.66, flatShading: true }),
-  ];
-  const blobs = [
-    [1.05, 0, 0.28, 0, 0],
-    [0.78, 0.62, 0.12, 0.18, 1],
-    [0.74, -0.58, 0.18, -0.12, 1],
-    [0.62, 0.12, 0.78, 0.08, 2],
-    [0.58, -0.18, -0.08, 0.48, 2],
-    [0.52, 0.28, 0.42, -0.5, 3],
-    [0.46, -0.42, 0.55, 0.28, 3],
-    [0.4, 0.48, -0.02, -0.22, 0],
-  ];
-  blobs.forEach(function (b) {
-    const mesh = new THREE.Mesh(new THREE.IcosahedronGeometry(b[0], 1), foliageColors[b[4]]);
-    mesh.position.set(b[1], b[2], b[3]);
-    group.add(mesh);
-  });
-
-  const leafCount = mobile ? 120 : 240;
-  const leafGeo = new THREE.IcosahedronGeometry(1, 0);
-  const leafMat = new THREE.MeshStandardMaterial({
-    color: 0xffffff,
-    emissive: 0x2a6a3c,
-    emissiveIntensity: 0.4,
-    roughness: 0.62,
-    flatShading: true,
-    vertexColors: true,
-  });
-  const leaves = new THREE.InstancedMesh(leafGeo, leafMat, leafCount);
-  const leafColors = new Float32Array(leafCount * 3);
-  const leafPalette = [
-    new THREE.Color("#4e9a55"),
-    new THREE.Color("#6fbf63"),
-    new THREE.Color("#8fd56e"),
-    new THREE.Color("#b6e48a"),
-    new THREE.Color("#dff5c4"),
-  ];
-  const leafDummy = new THREE.Object3D();
-  for (let i = 0; i < leafCount; i++) {
-    const t = (i + 0.5) / leafCount;
-    const y = 1 - t * 2;
-    const ring = Math.sqrt(Math.max(0, 1 - y * y));
-    const theta = Math.PI * (1 + Math.sqrt(5)) * i;
-    const radius = 0.92 + (i % 6) * 0.055;
-    const size = 0.085 + (i % 5) * 0.02;
-    leafDummy.position.set(
-      Math.cos(theta) * ring * radius,
-      y * radius * 0.78 + 0.32,
-      Math.sin(theta) * ring * radius
-    );
-    leafDummy.scale.setScalar(size);
-    leafDummy.rotation.set(i * 0.4, i * 0.7, i * 0.2);
-    leafDummy.updateMatrix();
-    leaves.setMatrixAt(i, leafDummy.matrix);
-    const tint = leafPalette[i % leafPalette.length];
-    leafColors[i * 3] = tint.r;
-    leafColors[i * 3 + 1] = tint.g;
-    leafColors[i * 3 + 2] = tint.b;
-  }
-  leaves.instanceMatrix.needsUpdate = true;
-  leaves.instanceColor = new THREE.InstancedBufferAttribute(leafColors, 3);
-  group.add(leaves);
-
-  const count = mobile ? 48 : 90;
-  const positions = new Float32Array(count * 3);
-  const colors = new Float32Array(count * 3);
-  const scales = new Float32Array(count);
-  const palette = [new THREE.Color("#c5e08a"), new THREE.Color("#7dba62"), new THREE.Color("#e7f3cf")];
-  for (let i = 0; i < count; i++) {
-    const i3 = i * 3;
-    const theta = Math.random() * Math.PI * 2;
-    const rad = 1.15 + Math.random() * 0.85;
-    positions[i3] = Math.cos(theta) * rad;
-    positions[i3 + 1] = -0.2 + Math.random() * 1.8;
-    positions[i3 + 2] = Math.sin(theta) * rad * 0.75;
-    const color = palette[i % palette.length];
-    colors[i3] = color.r;
-    colors[i3 + 1] = color.g;
-    colors[i3 + 2] = color.b;
-    scales[i] = 0.7 + (i % 4) * 0.18;
-  }
-
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-  geo.setAttribute("aColor", new THREE.BufferAttribute(colors, 3));
-  geo.setAttribute("aScale", new THREE.BufferAttribute(scales, 1));
-
-  const uniforms = {
-    uTime: { value: 0 },
-    uMouse: { value: new THREE.Vector2() },
-    uScroll: { value: 0 },
-    uPixelRatio: { value: 1 },
-  };
-  const points = new THREE.Points(
-    geo,
-    new THREE.ShaderMaterial({
-      uniforms: uniforms,
-      transparent: true,
-      depthWrite: false,
-      blending: THREE.AdditiveBlending,
-      toneMapped: false,
-      vertexShader: [
-        "attribute float aScale;",
-        "attribute vec3 aColor;",
-        "uniform float uTime;",
-        "uniform vec2 uMouse;",
-        "uniform float uScroll;",
-        "uniform float uPixelRatio;",
-        "varying vec3 vColor;",
-        "void main() {",
-        "  vColor = aColor;",
-        "  vec3 p = position;",
-        "  p.y += sin(uTime * 0.6 + position.x * 2.0) * 0.12 + uScroll * 0.25;",
-        "  p.x += sin(uTime * 0.4 + position.y) * 0.06 + uMouse.x * 0.18;",
-        "  p.z += cos(uTime * 0.35 + position.y) * 0.05;",
-        "  vec4 mv = modelViewMatrix * vec4(p, 1.0);",
-        "  gl_PointSize = aScale * uPixelRatio * (150.0 / max(0.1, -mv.z));",
-        "  gl_Position = projectionMatrix * mv;",
-        "}",
-      ].join("\n"),
-      fragmentShader: [
-        "varying vec3 vColor;",
-        "void main() {",
-        "  float d = length(gl_PointCoord - vec2(0.5));",
-        "  float alpha = smoothstep(0.5, 0.12, d);",
-        "  if (alpha < 0.02) discard;",
-        "  gl_FragColor = vec4(vColor, alpha);",
-        "  #include <colorspace_fragment>",
-        "}",
-      ].join("\n"),
-    })
-  );
-  group.add(points);
-
-  const mouse = { x: 0, y: 0 };
+  const target = { x: 0, y: 0 };
   const smooth = { x: 0, y: 0 };
-  window.addEventListener(
-    "pointermove",
-    function (e) {
-      if (e.pointerType === "touch") return;
-      mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-      mouse.y = (e.clientY / window.innerHeight) * 2 - 1;
-    },
-    { passive: true }
-  );
-
-  let wide = window.innerWidth >= 860;
-  let baseY = 0;
-
-  function resize() {
-    const w = hero.clientWidth || window.innerWidth;
-    const h = hero.clientHeight || window.innerHeight;
-    const pr = Math.min(window.devicePixelRatio || 1, w < 760 ? 1.35 : 1.6);
-    renderer.setPixelRatio(pr);
-    renderer.setSize(w, h, false);
-    camera.aspect = w / Math.max(h, 1);
-    camera.updateProjectionMatrix();
-    uniforms.uPixelRatio.value = pr;
-    wide = w >= 860;
-    baseY = wide ? 0.05 : 0.85;
-    camera.position.z = wide ? 6.35 : 7.35;
-    group.position.x = wide ? 1.28 : 0;
-  }
-
-  resize();
-  window.addEventListener("resize", resize, { passive: true });
-
-  let spin = 0;
+  let scrollY = window.scrollY;
+  let visible = true;
   let raf = 0;
-  let looping = false;
-  let heroOn = true;
 
-  function heroProgress() {
-    const rect = hero.getBoundingClientRect();
-    const h = rect.height || 1;
-    return Math.min(1, Math.max(0, -rect.top / h));
+  if (finePointer) {
+    hero.addEventListener("pointermove", function (e) {
+      const r = hero.getBoundingClientRect();
+      target.x = (e.clientX - r.left) / r.width - 0.5;
+      target.y = (e.clientY - r.top) / r.height - 0.5;
+      kick();
+    });
+    hero.addEventListener("pointerleave", function () {
+      target.x = 0;
+      target.y = 0;
+      kick();
+    });
+  }
+  document.addEventListener("scroll", function () {
+    scrollY = window.scrollY;
+    kick();
+  }, { passive: true });
+
+  function frame() {
+    raf = 0;
+    smooth.x += (target.x - smooth.x) * 0.08;
+    smooth.y += (target.y - smooth.y) * 0.08;
+    const sy = Math.min(scrollY, window.innerHeight);
+    layers.forEach(function (l) {
+      const tx = -smooth.x * 34 * l.depth;
+      const ty = -smooth.y * 16 * l.depth + sy * (0.45 - l.depth * 0.45);
+      l.el.style.transform = "translate3d(" + tx.toFixed(2) + "px," + ty.toFixed(2) + "px,0)";
+    });
+    hero.style.setProperty("--px", smooth.x.toFixed(4));
+    hero.style.setProperty("--py", smooth.y.toFixed(4));
+    if (Math.abs(target.x - smooth.x) > 0.001 || Math.abs(target.y - smooth.y) > 0.001) kick();
   }
 
-  function frame(now) {
-    if (!looping) return;
-    const time = now * 0.001;
-    const scroll = heroProgress();
-    smooth.x += (mouse.x - smooth.x) * 0.06;
-    smooth.y += (mouse.y - smooth.y) * 0.06;
-    spin += 0.0022;
-    group.rotation.y = spin + smooth.x * 0.28;
-    group.rotation.z = Math.sin(time * 0.7) * 0.035 + smooth.x * 0.03;
-    group.rotation.x = Math.sin(time * 0.45) * 0.025 - smooth.y * 0.12;
-    group.position.y = baseY + Math.sin(time * 0.6) * 0.05 - scroll * 0.2;
-    leaves.rotation.y = Math.sin(time * 0.35) * 0.04;
-    uniforms.uTime.value = time;
-    uniforms.uMouse.value.set(smooth.x, -smooth.y);
-    uniforms.uScroll.value = scroll;
-    if (finePointer) {
-      hero.style.setProperty("--px", smooth.x.toFixed(4));
-      hero.style.setProperty("--py", smooth.y.toFixed(4));
-    }
-    renderer.render(scene, camera);
-    raf = requestAnimationFrame(frame);
+  function kick() {
+    if (!raf && visible) raf = requestAnimationFrame(frame);
   }
-
-  function start() {
-    if (looping) return;
-    looping = true;
-    raf = requestAnimationFrame(frame);
-  }
-
-  function stop() {
-    looping = false;
-    cancelAnimationFrame(raf);
-  }
-
-  canvas.addEventListener(
-    "webglcontextlost",
-    function (event) {
-      event.preventDefault();
-      stop();
-      document.documentElement.classList.remove("webgl-ready");
-    },
-    { once: true }
-  );
-
-  try {
-    renderer.render(scene, camera);
-  } catch (e) {
-    renderer.dispose();
-    return;
-  }
-
-  document.documentElement.classList.add("webgl-ready");
-  start();
 
   if ("IntersectionObserver" in window) {
-    const io = new IntersectionObserver(function (entries) {
-      heroOn = entries[0].isIntersecting;
-      if (heroOn && !document.hidden) start();
-      else stop();
-    });
-    io.observe(hero);
+    new IntersectionObserver(function (entries) {
+      visible = entries[0].isIntersecting;
+      if (visible) kick();
+    }).observe(hero);
+  }
+  kick();
+}
+
+/* ---------- forest friends: hover, tap, speech bubbles ---------- */
+const CRITTER_LINES = {
+  zh: [
+    "你好，我叫陈怡天",
+    "往下滑，看看我的实习经历吧～",
+    "我的抖音视频单条 500 万+ 播放哦！",
+    "「创作」里有两个我做的互动网页～",
+    "想聊聊？邮箱就在页面最下面！"
+  ],
+  en: [
+    "Hi, I'm Chen Yitian",
+    "Scroll down to see my internships~",
+    "One of my Douyin videos hit 5M+ views!",
+    "Two live web projects wait in “Work”~",
+    "Want to chat? My email is at the bottom!"
+  ]
+};
+const PEEK_LINES = {
+  zh: ["你好，我叫陈怡天", "发邮件给我吧，我会认真回复～", "谢谢你看完我的简历！"],
+  en: ["Hi, I'm Chen Yitian", "Drop me an email — I'll reply soon~", "Thanks for reading my resume!"]
+};
+
+function initCritters() {
+  const buttons = Array.from(document.querySelectorAll(".critter"));
+  if (!buttons.length) return;
+  const live = document.getElementById("critter-live");
+  const state = new Map();
+
+  function linesFor(btn) {
+    const set = btn.dataset.critter === "peek" ? PEEK_LINES : CRITTER_LINES;
+    return isEnglish() ? set.en : set.zh;
   }
 
-  document.addEventListener("visibilitychange", function () {
-    if (document.hidden) stop();
-    else if (heroOn) start();
+  function fit(bubble) {
+    bubble.style.setProperty("--shift", "0px");
+    const r = bubble.getBoundingClientRect();
+    const over = r.right - (document.documentElement.clientWidth - 8);
+    if (over > 0) bubble.style.setProperty("--shift", -Math.ceil(over) + "px");
+  }
+
+  function say(btn, index, announce) {
+    const wrap = btn.closest(".critter-wrap");
+    const bubble = wrap && wrap.querySelector(".bubble");
+    if (!bubble) return;
+    const s = state.get(btn);
+    const lines = linesFor(btn);
+    // one voice at a time
+    document.querySelectorAll(".bubble.is-on").forEach(function (other) {
+      if (other !== bubble) other.classList.remove("is-on");
+    });
+    s.index = index % lines.length;
+    bubble.querySelector(".bubble-text").textContent = lines[s.index];
+    bubble.classList.add("is-on");
+    fit(bubble);
+    if (announce && live) live.textContent = lines[s.index];
+    clearTimeout(s.timer);
+    s.timer = setTimeout(function () {
+      bubble.classList.remove("is-on");
+    }, 4200);
+  }
+
+  function hop(btn) {
+    btn.classList.remove("is-jump");
+    void btn.offsetWidth;
+    btn.classList.add("is-jump");
+    clearTimeout(state.get(btn).hopTimer);
+    state.get(btn).hopTimer = setTimeout(function () {
+      btn.classList.remove("is-jump");
+    }, reduceMotion ? 400 : 1300);
+  }
+
+  buttons.forEach(function (btn) {
+    state.set(btn, { index: -1, timer: 0, hopTimer: 0 });
+    btn.addEventListener("click", function () {
+      const s = state.get(btn);
+      const bubble = btn.closest(".critter-wrap").querySelector(".bubble");
+      // a fresh tap always opens with the greeting; quick repeat taps cycle the other lines
+      const next = bubble.classList.contains("is-on") ? s.index + 1 : 0;
+      hop(btn);
+      say(btn, next, true);
+    });
   });
+
+  function relabel() {
+    const en = isEnglish();
+    buttons.forEach(function (btn) {
+      btn.setAttribute("aria-label", en ? btn.dataset.labelEn : btn.dataset.labelZh);
+      const s = state.get(btn);
+      const bubble = btn.closest(".critter-wrap").querySelector(".bubble");
+      if (bubble.classList.contains("is-on")) {
+        bubble.querySelector(".bubble-text").textContent = linesFor(btn)[s.index];
+        fit(bubble);
+      }
+    });
+  }
+  document.getElementById("lang-toggle")?.addEventListener("click", relabel);
+  relabel();
+
+  window.addEventListener("resize", function () {
+    document.querySelectorAll(".bubble.is-on").forEach(fit);
+  });
+
+  // greet once on load
+  const cat = document.querySelector(".critter-cat");
+  if (cat) {
+    setTimeout(function () {
+      if (!reduceMotion) hop(cat);
+      say(cat, 0, false);
+    }, 900);
+  }
 }
 
 initLang();
@@ -527,4 +386,5 @@ initHeader();
 initReveal();
 initStats();
 initTilt();
-init3D();
+initForest();
+initCritters();
