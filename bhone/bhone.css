@@ -20,8 +20,12 @@ html {
   -webkit-font-smoothing: antialiased;
 }
 
-html.lang-zh .en { display: none !important; }
-html.lang-en .zh { display: none !important; }
+html.lang-zh .en,
+html.lang-zh .fr { display: none !important; }
+html.lang-en .zh,
+html.lang-en .fr { display: none !important; }
+html.lang-fr .zh,
+html.lang-fr .en { display: none !important; }
 
 body {
   margin: 0;
@@ -142,22 +146,36 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .lang-switch {
   grid-area: lang;
   justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
   border: 1px solid var(--line);
-  background: transparent;
-  color: var(--ink);
   border-radius: 999px;
-  padding: 0.28rem 0.75rem;
+  padding: 2px;
+  background: transparent;
+}
+
+.lang-switch button {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.28rem 0.62rem;
   font: inherit;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   cursor: pointer;
 }
 
-.lang-switch:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+.lang-switch button:hover { color: var(--ink); }
+
+.lang-switch button[aria-pressed="true"] {
+  background: var(--accent);
+  color: #071422;
 }
+
+.lang-switch button[aria-pressed="true"]:hover { color: #071422; }
 
 @media (min-width: 900px) {
   .site-header-inner {
@@ -194,8 +212,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
   letter-spacing: 0.04em;
 }
 
-html.lang-en .eyebrow {
-  letter-spacing: 0.12em;
+html.lang-en .eyebrow,
+html.lang-fr .eyebrow {
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   font-size: 0.75rem;
 }
@@ -217,7 +236,8 @@ html.lang-en .eyebrow {
 }
 
 .headline .zh,
-.headline .en { display: block; }
+.headline .en,
+.headline .fr { display: block; }
 
 .hero-meta {
   margin: 1.15rem 0 0;
